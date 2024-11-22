@@ -1,4 +1,6 @@
+
 [gd_scene load_steps=12 format=3 uid="uid://bva6jjs3q5tws"]
+
 
 [ext_resource type="Script" path="res://Scripts/random_system.gd" id="1_38dti"]
 [ext_resource type="Script" path="res://Scripts/сamera.gd" id="1_g3w6i"]
@@ -7,8 +9,32 @@
 [ext_resource type="Script" path="res://Scripts/TerrainGeneration/terrain_generator.gd" id="2_redno"]
 [ext_resource type="PackedScene" uid="uid://c2017ftjcxbam" path="res://Scenes/player.tscn" id="3_vobs3"]
 [ext_resource type="Shader" uid="uid://v27jtucnjeeq" path="res://line.tres" id="4_21xhv"]
+
 [ext_resource type="PackedScene" uid="uid://d3d05t20i0h0r" path="res://Scenes/flower.tscn" id="8_pkjc4"]
 [ext_resource type="Script" path="res://Scripts/decoration.gd" id="9_gi5x3"]
+[ext_resource type="Script" path="res://Scripts/game_dimension_change.gd" id="10_w6fsc"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uu4jv"]
+size = Vector2(64, 64)
+
+[sub_resource type="Gradient" id="Gradient_tp18i"]
+interpolation_mode = 2
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_1lf8x"]
+gradient = SubResource("Gradient_tp18i")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+metadata/_snap_enabled = true
+
+[sub_resource type="Resource" id="Resource_m7sui"]
+script = ExtResource("4_ygruv")
+prefab = ExtResource("3_t801l")
+spawn_on_center = true
+initial_chance = 100
+chance_to_spawn = 20.0
+chance_multiplyer = 1
+min_scale = 6.0
+max_scale = 6.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_53rot"]
 shader = ExtResource("4_21xhv")
@@ -62,8 +88,18 @@ max_radius = 20
 rs = NodePath("../../RandomSystem")
 sloper = NodePath("../../TerrainGenerator/Sloper")
 player = NodePath("../../Player")
+
 line = NodePath("..")
 terrain_generator = NodePath("../../TerrainGenerator")
 decorations = Array[ExtResource("9_gi5x3")]([SubResource("Resource_uvuv7")])
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Line2D"]
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+autostart = true
+script = ExtResource("10_w6fsc")
+
+[connection signal="timeout" from="Timer" to="Timer" method="_on_timeout"]
+

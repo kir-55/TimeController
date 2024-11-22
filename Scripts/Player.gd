@@ -15,6 +15,7 @@ extends CharacterBody2D
 @export var coyote_time: float = 0.2 # Time the player can jump after leaving the ground
 @export var jump_buffer_time: float = 0.15 # Time the player can press jump before landing
 
+
 # Internal variables
 var is_jumping: bool = false
 var is_dashing: bool = false
@@ -22,6 +23,11 @@ var dash_timer: float = 0.0
 var dash_cooldown_timer: float = 0.0
 var coyote_timer: float = 0.0
 var jump_buffer_timer: float = 0.0
+
+func _ready():
+	if GlobalObjects.player_global_position_x:
+		global_position.x = GlobalObjects.player_global_position_x
+
 
 func _physics_process(delta: float) -> void:
 	# Gravity
