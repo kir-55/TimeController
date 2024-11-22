@@ -1,31 +1,33 @@
-[gd_scene load_steps=17 format=3 uid="uid://bva6jjs3q5tws"]
+[gd_scene load_steps=17 format=3 uid="uid://c2o83u0dwoyy2"]
 
-[ext_resource type="Script" path="res://Scripts/random_system.gd" id="1_38dti"]
-[ext_resource type="Script" path="res://Scripts/сamera.gd" id="1_g3w6i"]
-[ext_resource type="Script" path="res://Scripts/Player.gd" id="1_h16cp"]
-[ext_resource type="Script" path="res://Scripts/sloper.gd" id="1_pfyk3"]
-[ext_resource type="Script" path="res://Scripts/decoration_spawner.gd" id="2_mltma"]
-[ext_resource type="Script" path="res://Scripts/TerrainGeneration/terrain_generator.gd" id="2_redno"]
-[ext_resource type="PackedScene" uid="uid://d3d05t20i0h0r" path="res://Scenes/flower.tscn" id="3_t801l"]
-[ext_resource type="Shader" uid="uid://v27jtucnjeeq" path="res://line.tres" id="4_21xhv"]
-[ext_resource type="Script" path="res://Scripts/decoration.gd" id="4_ygruv"]
-[ext_resource type="Script" path="res://Scripts/game_dimension_change.gd" id="10_w6fsc"]
+[ext_resource type="Script" path="res://Scripts/сamera.gd" id="1_whd7x"]
+[ext_resource type="Script" path="res://Scripts/random_system.gd" id="2_a2nmy"]
+[ext_resource type="Script" path="res://Scripts/Player.gd" id="3_1xwo5"]
+[ext_resource type="Script" path="res://Scripts/TerrainGeneration/terrain_generator.gd" id="4_cx37m"]
+[ext_resource type="PackedScene" uid="uid://d3d05t20i0h0r" path="res://Scenes/flower.tscn" id="5_du87y"]
+[ext_resource type="Script" path="res://Scripts/decoration.gd" id="6_84rr2"]
+[ext_resource type="Script" path="res://Scripts/sloper.gd" id="7_jm042"]
+[ext_resource type="Shader" uid="uid://v27jtucnjeeq" path="res://line.tres" id="8_tkjsr"]
+[ext_resource type="Script" path="res://Scripts/decoration_spawner.gd" id="9_21quh"]
+[ext_resource type="Script" path="res://Scripts/dimension1_timer.gd" id="10_p7gkh"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_uu4jv"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gnemy"]
 size = Vector2(64, 64)
 
-[sub_resource type="Gradient" id="Gradient_tp18i"]
+[sub_resource type="Gradient" id="Gradient_cp0fc"]
 interpolation_mode = 2
+offsets = PackedFloat32Array(0, 0.980519, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.0257325, 0.0257325, 0.0257325, 1, 1, 1, 1, 1)
 
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_1lf8x"]
-gradient = SubResource("Gradient_tp18i")
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_0y5hf"]
+gradient = SubResource("Gradient_cp0fc")
 fill = 1
 fill_from = Vector2(0.5, 0.5)
 metadata/_snap_enabled = true
 
 [sub_resource type="Resource" id="Resource_m7sui"]
-script = ExtResource("4_ygruv")
-prefab = ExtResource("3_t801l")
+script = ExtResource("6_84rr2")
+prefab = ExtResource("5_du87y")
 spawn_on_center = true
 initial_chance = 100
 chance_to_spawn = 20.0
@@ -33,15 +35,15 @@ chance_multiplyer = 1
 min_scale = 6.0
 max_scale = 6.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_53rot"]
-shader = ExtResource("4_21xhv")
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_onrqi"]
+shader = ExtResource("8_tkjsr")
 shader_parameter/XShiftAmplitude = null
 shader_parameter/MinLineThikness = Vector2(0, 300)
 shader_parameter/MaxThikness = 3000.0
 
 [sub_resource type="Resource" id="Resource_cnwvw"]
-script = ExtResource("4_ygruv")
-prefab = ExtResource("3_t801l")
+script = ExtResource("6_84rr2")
+prefab = ExtResource("5_du87y")
 spawn_on_center = true
 initial_chance = 100
 chance_to_spawn = 20.0
@@ -49,30 +51,30 @@ chance_multiplyer = 1
 min_scale = 6.0
 max_scale = 6.0
 
-[node name="Game" type="Node2D"]
+[node name="Dimension1" type="Node2D"]
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("target")]
 position = Vector2(-749, 38)
-script = ExtResource("1_g3w6i")
+script = ExtResource("1_whd7x")
 speed = 3.0
 target = NodePath("../Player")
 
 [node name="RandomSystem" type="Node" parent="."]
-script = ExtResource("1_38dti")
+script = ExtResource("2_a2nmy")
 
 [node name="Player" type="CharacterBody2D" parent="."]
-position = Vector2(-749, -722)
-script = ExtResource("1_h16cp")
+position = Vector2(-749, -48)
+script = ExtResource("3_1xwo5")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
-shape = SubResource("RectangleShape2D_uu4jv")
+shape = SubResource("RectangleShape2D_gnemy")
 
 [node name="Sprite2D" type="Sprite2D" parent="Player"]
-texture = SubResource("GradientTexture2D_1lf8x")
+texture = SubResource("GradientTexture2D_0y5hf")
 
 [node name="TerrainGenerator" type="Node2D" parent="." node_paths=PackedStringArray("ground_line", "floor_collider", "rs", "sloper", "player")]
 position = Vector2(-758, 278)
-script = ExtResource("2_redno")
+script = ExtResource("4_cx37m")
 ground_line = NodePath("Line2D")
 floor_collider = NodePath("Line2D/StaticBody2D")
 rs = NodePath("../RandomSystem")
@@ -80,21 +82,22 @@ sloper = NodePath("Sloper")
 points_amount = 1
 line_section_length = 200
 section_y_change_amplitude = 50
-decorations = Array[ExtResource("4_ygruv")]([SubResource("Resource_m7sui")])
+decorations = Array[ExtResource("6_84rr2")]([SubResource("Resource_m7sui")])
 player = NodePath("../Player")
 
 [node name="Sloper" type="Node" parent="TerrainGenerator" node_paths=PackedStringArray("line", "terrain_generator")]
-script = ExtResource("1_pfyk3")
+script = ExtResource("7_jm042")
 line = NodePath("../Line2D")
 terrain_generator = NodePath("..")
 
 [node name="Line2D" type="Line2D" parent="TerrainGenerator"]
-material = SubResource("ShaderMaterial_53rot")
+material = SubResource("ShaderMaterial_onrqi")
+default_color = Color(0, 0.935626, 0.206534, 1)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="TerrainGenerator/Line2D"]
 
 [node name="DecorationSpawner" type="Node2D" parent="TerrainGenerator" node_paths=PackedStringArray("rs", "sloper", "player", "line", "terrain_generator")]
-script = ExtResource("2_mltma")
+script = ExtResource("9_21quh")
 load_radius = 3
 max_radius = 10
 rs = NodePath("../../RandomSystem")
@@ -102,12 +105,12 @@ sloper = NodePath("../Sloper")
 player = NodePath("../../Player")
 line = NodePath("../Line2D")
 terrain_generator = NodePath("..")
-decorations = Array[ExtResource("4_ygruv")]([SubResource("Resource_cnwvw")])
+decorations = Array[ExtResource("6_84rr2")]([SubResource("Resource_cnwvw")])
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 5.0
 one_shot = true
 autostart = true
-script = ExtResource("10_w6fsc")
+script = ExtResource("10_p7gkh")
 
 [connection signal="timeout" from="Timer" to="Timer" method="_on_timeout"]
