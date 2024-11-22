@@ -25,11 +25,11 @@ var coyote_timer: float = 0.0
 var jump_buffer_timer: float = 0.0
 
 func _ready():
-	if GlobalObjects.player_global_position_x:
-		global_position.x = GlobalObjects.player_global_position_x
+	pass
 
 
 func _physics_process(delta: float) -> void:
+	#print(global_position)
 	# Gravity
 	if not is_on_floor() and not is_dashing:
 		velocity.y += gravity * delta

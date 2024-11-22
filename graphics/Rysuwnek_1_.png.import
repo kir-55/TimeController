@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cd4op3yvldxp1"
-path="res://.godot/imported/lava-under.png-157cc38d3d2c67491e305fdd5591a268.ctex"
+uid="uid://elwdkhnntkh8"
+path="res://.godot/imported/Rysuwnek_1_.png-f1d767c787a35038d162f8b94a54a371.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://textures/lava-under.png"
-dest_files=["res://.godot/imported/lava-under.png-157cc38d3d2c67491e305fdd5591a268.ctex"]
+source_file="res://graphics/Rysuwnek_1_.png"
+dest_files=["res://.godot/imported/Rysuwnek_1_.png-f1d767c787a35038d162f8b94a54a371.ctex"]
 
 [params]
 

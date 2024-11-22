@@ -1,116 +1,292 @@
-[gd_scene load_steps=17 format=3 uid="uid://c2o83u0dwoyy2"]
+[gd_scene load_steps=14 format=3 uid="uid://c2o83u0dwoyy2"]
 
 [ext_resource type="Script" path="res://Scripts/сamera.gd" id="1_whd7x"]
-[ext_resource type="Script" path="res://Scripts/random_system.gd" id="2_a2nmy"]
-[ext_resource type="Script" path="res://Scripts/Player.gd" id="3_1xwo5"]
-[ext_resource type="Script" path="res://Scripts/TerrainGeneration/terrain_generator.gd" id="4_cx37m"]
-[ext_resource type="PackedScene" uid="uid://d3d05t20i0h0r" path="res://Scenes/flower.tscn" id="5_du87y"]
 [ext_resource type="Script" path="res://Scripts/decoration.gd" id="6_84rr2"]
-[ext_resource type="Script" path="res://Scripts/sloper.gd" id="7_jm042"]
 [ext_resource type="Shader" uid="uid://v27jtucnjeeq" path="res://line.tres" id="8_tkjsr"]
 [ext_resource type="Script" path="res://Scripts/decoration_spawner.gd" id="9_21quh"]
-[ext_resource type="Script" path="res://Scripts/dimension1_timer.gd" id="10_p7gkh"]
+[ext_resource type="PackedScene" uid="uid://c2017ftjcxbam" path="res://Scenes/player.tscn" id="10_dj87k"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_gnemy"]
-size = Vector2(64, 64)
+[sub_resource type="GDScript" id="GDScript_beyqk"]
+script/source = "class_name RandomSystem
+extends Node
 
-[sub_resource type="Gradient" id="Gradient_cp0fc"]
-interpolation_mode = 2
-offsets = PackedFloat32Array(0, 0.980519, 1)
-colors = PackedColorArray(0, 0, 0, 1, 0.0257325, 0.0257325, 0.0257325, 1, 1, 1, 1, 1)
 
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_0y5hf"]
-gradient = SubResource("Gradient_cp0fc")
-fill = 1
-fill_from = Vector2(0.5, 0.5)
-metadata/_snap_enabled = true
+# Use this script when generating terain, objects positions, man stats and other static stuff
+# For dynamic stuff like man wounder direction don't use this script
+var main_seed = \"Dominik1\"
+var rng = RandomNumberGenerator.new()
+var state
 
-[sub_resource type="Resource" id="Resource_m7sui"]
-script = ExtResource("6_84rr2")
-prefab = ExtResource("5_du87y")
-spawn_on_center = true
-initial_chance = 100
-chance_to_spawn = 20.0
-chance_multiplyer = 1
-min_scale = 6.0
-max_scale = 6.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_onrqi"]
+func _ready():
+	rng.seed = hash(main_seed)
+	#rng.state = 1
+	pass
+
+func get_rnd_int(min: int, max: int) -> int:
+	return rng.randi_range(min, max)# randi_range
+	
+func get_rnd_float(min: float, max: float) -> float:
+	return rng.randf_range(min, max)
+
+
+func get_rnd_int_at(min: int, max: int, seed = main_seed) -> int:
+	#var prev_state = rng.state
+	
+	rng.seed = hash(seed)
+	#rng.state = at
+	
+	var value = rng.randi_range(min, max)
+	
+	rng.seed = hash(main_seed)
+	#rng.state = prev_state
+	
+	return value
+
+
+func get_rnd_float_at(min: float, max: float, seed = main_seed) -> float:
+	#var prev_state = rng.state
+	
+	rng.seed = hash(seed)
+	#rng.state = at
+	
+	var value = rng.randf_range(min, max)
+	
+	rng.seed = hash(main_seed)
+	#rng.state = prev_state
+	
+	return value
+"
+
+[sub_resource type="GDScript" id="GDScript_i1si6"]
+script/source = "extends Node
+
+@export var ground_line: Line2D
+@export var floor_collider: StaticBody2D
+
+@export var rs: RandomSystem
+@export var sloper: Sloper
+
+@export var line_length := 100
+
+# x distance between points
+@export var line_segment_length = 96
+@export var section_y_change_amplitude = 50
+
+@export var decorations: Array[Decoration]
+
+
+@onready var line_offset = ground_line.width / 2 - 1
+
+
+func _ready():
+	ground_line.global_position.x = -line_length * line_segment_length/2
+	ground_line.add_point(Vector2.ZERO)
+	
+	
+	
+	for i in range(line_length-1):
+		if i % 2 == 1:
+			create_next_point(ground_line.get_point_position(i) + Vector2(line_segment_length, rs.get_rnd_float(-section_y_change_amplitude, section_y_change_amplitude)), ground_line.get_point_position(i))
+		else:
+			create_next_point(ground_line.get_point_position(i) + Vector2(line_segment_length, 0), ground_line.get_point_position(i))
+	
+	
+	
+	var points = ground_line.points
+		
+	#poligon_points.append(points[points.size()-1] - Vector2(0, line_offset - 300))
+	#poligon_points.append(points[0] - Vector2(0, line_offset - 300))
+	
+	#light_occuluder.occluder.polygon = poligon_points
+	
+	#print(\"occluder: \" + str(light_occuluder.occluder.polygon[1]))
+	#sloper.spawn_at_point(big_rock, self, 3, rs.get_rnd_float(0, 1))
+	#$sloper.spawn_at_point(big_rock, self, points_amount - 3, rs.get_rnd_float(0, 1))
+	
+	#sloper.spawn_at_point(main_house_prefab, village, main_house_pos, rs.get_rnd_float(0, 1))
+
+func _process(delta):
+	pass
+	#if player.global_position.x > ground_line.get_point_position(ground_line.points.size()-1).x - 2000:
+		#if ground_line.points.size() % 2 == 1:
+			#create_next_point(ground_line.get_point_position(ground_line.points.size()-1) + Vector2(line_section_length, rs.get_rnd_float(-section_y_change_amplitude, section_y_change_amplitude)), ground_line.get_point_position(ground_line.points.size()-1))
+		#else:
+			#create_next_point(ground_line.get_point_position(ground_line.points.size()-1) + Vector2(line_section_length, 0), ground_line.get_point_position(ground_line.points.size()-1))
+
+
+func create_next_point(position: Vector2, lastPosition: Vector2):
+	var new_shape = CollisionShape2D.new()
+	floor_collider.add_child(new_shape)
+	var segment = SegmentShape2D.new()
+	segment.a = lastPosition - Vector2(0, line_offset)
+	segment.b = position - Vector2(0, line_offset)
+	new_shape.shape = segment
+	ground_line.add_point(position)
+	#grass_line.add_point(position)
+"
+
+[sub_resource type="GDScript" id="GDScript_fp7av"]
+script/source = "class_name Sloper
+extends Node
+
+
+# This script spawns objects on the ground line and manages their rotaions
+
+var line_start_x: float
+var line_section_length: int
+@export var line: Line2D
+@export var terrain_generator: Node2D
+
+@export var player_prefab: PackedScene
+var player: Node2D
+
+var line_segment_lenght
+var line_lenght
+@onready var line_offset = line.width / 2 - 1
+
+func _ready():
+	line_start_x = line.global_position.x
+	line_section_length = terrain_generator.line_segment_length
+	
+	
+	
+func _physics_process(delta):
+	if !player:
+		player = spawn_at_point(player_prefab, get_tree().root.get_child(0), GlobalObjects.player_global_position_x, 0, Vector2(1, 1), Vector2(0, -700))
+	for sloper_target in get_tree().get_nodes_in_group(\"to_be_alined\"):
+		var closest_point = calc_closest_point(sloper_target)
+		if closest_point > -1:
+			var p1 = line.get_point_position(int(closest_point)) + line.global_position
+			var p2 = line.get_point_position(int(closest_point) + 1) + line.global_position
+			sloper_target.rotation = lerp_angle(sloper_target.rotation, (p2 - p1).angle(), 0.1)
+
+
+func calc_closest_point(entity) -> int:
+	return int((entity.global_position.x - line_start_x)/line_section_length)
+
+
+
+func spawn_at_point(object: PackedScene, parent: Node, point: int, part_of_segment: float = 0, scale := Vector2.ZERO, offset:= Vector2.ZERO):
+	var p1 = line.get_point_position(point)
+	var p2 = line.get_point_position(point + 1)
+	
+	var a = (p2.y - p1.y) / (p2.x - p1.x)
+	var b = -a * p2.x + p2.y
+	
+	var distance = p2 - p1
+	var instance = object.instantiate()
+	var x = p1.x + line_section_length*part_of_segment
+	
+	instance.global_position = Vector2(x, x * a + b - line_offset) + offset
+	print(instance.global_position)
+	instance.rotation = distance.angle()
+	if scale.x != 0 and scale.y != 0:
+		instance.scale = scale
+	parent.add_child(instance)
+	return instance
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tb3ot"]
 shader = ExtResource("8_tkjsr")
 shader_parameter/XShiftAmplitude = null
 shader_parameter/MinLineThikness = Vector2(0, 300)
 shader_parameter/MaxThikness = 3000.0
 
-[sub_resource type="Resource" id="Resource_cnwvw"]
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_2vc0r"]
+load_path = "res://.godot/imported/spikes.png-2f35199f1f8545aadd2d8a02571f6980.ctex"
+
+[sub_resource type="GDScript" id="GDScript_a2xld"]
+script/source = "extends Sprite2D
+
+@export var max_angle := 30.0
+@export var max_distance := 20
+@export var rotation_speed := 0.1
+
+var player: Node2D
+
+var moving: Array[Node2D]
+
+func _ready():
+	for obj in get_tree().get_nodes_in_group(\"villagers\"):
+		obj.get_node(\"HealthSystem\").died.connect(unfollow_body)
+		moving.append(obj)
+	for obj in get_tree().get_nodes_in_group(\"enemies\"):
+		obj.get_node(\"HealthSystem\").died.connect(unfollow_body)
+		moving.append(obj)
+
+func unfollow_body(body):
+	print(\"died: \" + body.name)
+	moving.erase(body)
+
+func _process(delta):
+	if moving:
+		for obj in moving:
+			if obj:
+				var diff_x = obj.position.x - global_position.x
+				if diff_x >= 0 and diff_x < max_distance and rotation > -deg_to_rad(max_angle):
+					rotation = lerp_angle(rotation, rotation - deg_to_rad(max_angle), rotation_speed)
+				elif diff_x < 0 and diff_x > -max_distance and rotation < deg_to_rad(max_angle):
+					rotation = lerp_angle(rotation, rotation + deg_to_rad(max_angle), rotation_speed)
+			
+"
+
+[sub_resource type="PackedScene" id="PackedScene_rgkgw"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"names": PackedStringArray("Flower", "z_index", "scale", "texture", "offset", "script", "max_angle", "Sprite2D"),
+"node_count": 1,
+"node_paths": [],
+"nodes": PackedInt32Array(-1, -1, 7, 0, -1, 6, 1, 0, 2, 1, 3, 2, 4, 3, 5, 4, 6, 5, 0),
+"variants": [5, Vector2(6, 6), SubResource("CompressedTexture2D_2vc0r"), Vector2(-0.000285864, -8.16667), SubResource("GDScript_a2xld"), 50.0],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_uvuv7"]
 script = ExtResource("6_84rr2")
-prefab = ExtResource("5_du87y")
+prefab = SubResource("PackedScene_rgkgw")
 spawn_on_center = true
 initial_chance = 100
-chance_to_spawn = 20.0
+chance_to_spawn = 100.0
 chance_multiplyer = 1
 min_scale = 6.0
 max_scale = 6.0
 
 [node name="Dimension1" type="Node2D"]
 
-[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("target")]
-position = Vector2(-749, 38)
-script = ExtResource("1_whd7x")
-speed = 3.0
-target = NodePath("../Player")
-
 [node name="RandomSystem" type="Node" parent="."]
-script = ExtResource("2_a2nmy")
+script = SubResource("GDScript_beyqk")
 
-[node name="Player" type="CharacterBody2D" parent="."]
-position = Vector2(-749, -48)
-script = ExtResource("3_1xwo5")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
-shape = SubResource("RectangleShape2D_gnemy")
-
-[node name="Sprite2D" type="Sprite2D" parent="Player"]
-texture = SubResource("GradientTexture2D_0y5hf")
-
-[node name="TerrainGenerator" type="Node2D" parent="." node_paths=PackedStringArray("ground_line", "floor_collider", "rs", "sloper", "player")]
-position = Vector2(-758, 278)
-script = ExtResource("4_cx37m")
-ground_line = NodePath("Line2D")
-floor_collider = NodePath("Line2D/StaticBody2D")
+[node name="TerrainGenerator" type="Node2D" parent="." node_paths=PackedStringArray("ground_line", "floor_collider", "rs", "sloper")]
+script = SubResource("GDScript_i1si6")
+ground_line = NodePath("../Line2D")
+floor_collider = NodePath("../Line2D/StaticBody2D")
 rs = NodePath("../RandomSystem")
 sloper = NodePath("Sloper")
-points_amount = 1
-line_section_length = 200
-section_y_change_amplitude = 50
-decorations = Array[ExtResource("6_84rr2")]([SubResource("Resource_m7sui")])
-player = NodePath("../Player")
 
 [node name="Sloper" type="Node" parent="TerrainGenerator" node_paths=PackedStringArray("line", "terrain_generator")]
-script = ExtResource("7_jm042")
-line = NodePath("../Line2D")
+script = SubResource("GDScript_fp7av")
+line = NodePath("../../Line2D")
 terrain_generator = NodePath("..")
+player_prefab = ExtResource("10_dj87k")
 
-[node name="Line2D" type="Line2D" parent="TerrainGenerator"]
-material = SubResource("ShaderMaterial_onrqi")
-default_color = Color(0, 0.935626, 0.206534, 1)
+[node name="Line2D" type="Line2D" parent="."]
+material = SubResource("ShaderMaterial_tb3ot")
 
-[node name="StaticBody2D" type="StaticBody2D" parent="TerrainGenerator/Line2D"]
-
-[node name="DecorationSpawner" type="Node2D" parent="TerrainGenerator" node_paths=PackedStringArray("rs", "sloper", "player", "line", "terrain_generator")]
+[node name="DecorationSpawner" type="Node2D" parent="Line2D" node_paths=PackedStringArray("rs", "sloper", "line", "terrain_generator")]
 script = ExtResource("9_21quh")
-load_radius = 3
-max_radius = 10
+max_radius = 20
 rs = NodePath("../../RandomSystem")
-sloper = NodePath("../Sloper")
-player = NodePath("../../Player")
-line = NodePath("../Line2D")
-terrain_generator = NodePath("..")
-decorations = Array[ExtResource("6_84rr2")]([SubResource("Resource_cnwvw")])
+sloper = NodePath("../../TerrainGenerator/Sloper")
+line = NodePath("..")
+terrain_generator = NodePath("../../TerrainGenerator")
+decorations = Array[ExtResource("6_84rr2")]([SubResource("Resource_uvuv7")])
 
-[node name="Timer" type="Timer" parent="."]
-wait_time = 5.0
-one_shot = true
-autostart = true
-script = ExtResource("10_p7gkh")
+[node name="StaticBody2D" type="StaticBody2D" parent="Line2D"]
 
-[connection signal="timeout" from="Timer" to="Timer" method="_on_timeout"]
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(22, 48)
+script = ExtResource("1_whd7x")
+speed = 3.0

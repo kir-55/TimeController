@@ -1,47 +1,28 @@
+[gd_scene load_steps=8 format=3 uid="uid://bva6jjs3q5tws"]
 
-[gd_scene load_steps=12 format=3 uid="uid://bva6jjs3q5tws"]
-
-
-[ext_resource type="Script" path="res://Scripts/random_system.gd" id="1_38dti"]
 [ext_resource type="Script" path="res://Scripts/сamera.gd" id="1_g3w6i"]
-[ext_resource type="Script" path="res://Scripts/sloper.gd" id="1_pfyk3"]
-[ext_resource type="Script" path="res://Scripts/decoration_spawner.gd" id="2_mltma"]
-[ext_resource type="Script" path="res://Scripts/TerrainGeneration/terrain_generator.gd" id="2_redno"]
+[ext_resource type="Texture2D" uid="uid://bkcqblgw7rqln" path="res://graphics/Rysunek_1_.png" id="2_7sbqv"]
+[ext_resource type="Texture2D" uid="uid://elwdkhnntkh8" path="res://graphics/Rysuwnek_1_.png" id="3_tgy82"]
 [ext_resource type="PackedScene" uid="uid://c2017ftjcxbam" path="res://Scenes/player.tscn" id="3_vobs3"]
-[ext_resource type="Shader" uid="uid://v27jtucnjeeq" path="res://line.tres" id="4_21xhv"]
 
-[ext_resource type="PackedScene" uid="uid://d3d05t20i0h0r" path="res://Scenes/flower.tscn" id="8_pkjc4"]
-[ext_resource type="Script" path="res://Scripts/decoration.gd" id="9_gi5x3"]
-[ext_resource type="Script" path="res://Scripts/game_dimension_change.gd" id="10_w6fsc"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_pggbp"]
+texture = ExtResource("2_7sbqv")
+0:0/0 = 0
+0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_0/angular_velocity = 0.0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_uu4jv"]
-size = Vector2(64, 64)
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4prnx"]
+texture = ExtResource("3_tgy82")
+0:0/0 = 0
+0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_0/angular_velocity = 0.0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -5, 8, -5, 8, 8, -8, 8)
 
-[sub_resource type="Gradient" id="Gradient_tp18i"]
-interpolation_mode = 2
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_1lf8x"]
-gradient = SubResource("Gradient_tp18i")
-fill = 1
-fill_from = Vector2(0.5, 0.5)
-metadata/_snap_enabled = true
-
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_53rot"]
-shader = ExtResource("4_21xhv")
-shader_parameter/XShiftAmplitude = null
-shader_parameter/MinLineThikness = Vector2(0, 300)
-shader_parameter/MaxThikness = 3000.0
-
-[sub_resource type="Resource" id="Resource_uvuv7"]
-script = ExtResource("9_gi5x3")
-prefab = ExtResource("8_pkjc4")
-spawn_on_center = true
-initial_chance = 100
-chance_to_spawn = 100.0
-chance_multiplyer = 1
-min_scale = 6.0
-max_scale = 6.0
+[sub_resource type="TileSet" id="TileSet_jui2t"]
+physics_layer_0/collision_layer = 1
+sources/0 = SubResource("TileSetAtlasSource_pggbp")
+sources/1 = SubResource("TileSetAtlasSource_4prnx")
 
 [node name="Game" type="Node2D"]
 
@@ -51,46 +32,13 @@ script = ExtResource("1_g3w6i")
 speed = 3.0
 target = NodePath("../Player")
 
-[node name="RandomSystem" type="Node" parent="."]
-script = ExtResource("1_38dti")
-
-[node name="TerrainGenerator" type="Node2D" parent="." node_paths=PackedStringArray("ground_line", "floor_collider", "rs", "sloper")]
-script = ExtResource("2_redno")
-ground_line = NodePath("../Line2D")
-floor_collider = NodePath("../Line2D/StaticBody2D")
-rs = NodePath("../RandomSystem")
-sloper = NodePath("Sloper")
-line_length = 20
-
-[node name="Sloper" type="Node" parent="TerrainGenerator" node_paths=PackedStringArray("line", "terrain_generator")]
-script = ExtResource("1_pfyk3")
-line = NodePath("../../Line2D")
-terrain_generator = NodePath("..")
+[node name="TileMap" type="TileMap" parent="."]
+position = Vector2(22, 48)
+scale = Vector2(6, 6)
+tile_set = SubResource("TileSet_jui2t")
+format = 2
+layer_0/tile_data = PackedInt32Array(65529, 1, 0, 65530, 1, 0, 65531, 1, 0, 65532, 1, 0, 65533, 1, 0, 65534, 1, 0, 131070, 0, 0, 131071, 0, 0, 65536, 0, 0, 65537, 0, 0, 65538, 0, 0, 2, 1, 0, 65535, 1, 0, 0, 1, 0, 1, 1, 0, 131065, 0, 0, 131066, 0, 0, 131067, 0, 0, 131068, 0, 0, 131069, 0, 0, 65539, 0, 0, 3, 1, 0, 65540, 0, 0, 65541, 0, 0, 65542, 0, 0, 6, 1, 0, 5, 1, 0, 4, 1, 0, 7, 1, 0, 65543, 0, 0, 65544, 0, 0, 65545, 0, 0, 8, 1, 0, 9, 1, 0, 10, 1, 0, 11, 1, 0, 65546, 0, 0, 65547, 0, 0, 196601, 0, 0, 196602, 0, 0, 262138, 0, 0, 262139, 0, 0, 262140, 0, 0, 327676, 0, 0, 327677, 0, 0, 327678, 0, 0, 262142, 0, 0, 262143, 0, 0, 196608, 0, 0, 196609, 0, 0, 196610, 0, 0, 196611, 0, 0, 196612, 0, 0, 196613, 0, 0, 196614, 0, 0, 196615, 0, 0, 196616, 0, 0, 196617, 0, 0, 196618, 0, 0, 131081, 0, 0, 131080, 0, 0, 131079, 0, 0, 131078, 0, 0, 131077, 0, 0, 131076, 0, 0, 131075, 0, 0, 131074, 0, 0, 262141, 0, 0, 196604, 0, 0, 196605, 0, 0, 196607, 0, 0, 196606, 0, 0, 196603, 0, 0, 262137, 0, 0, 327672, 0, 0, 327673, 0, 0, 131082, 0, 0, 131083, 0, 0, 196619, 0, 0, 131072, 0, 0, 131073, 0, 0)
 
 [node name="Player" parent="." instance=ExtResource("3_vobs3")]
-position = Vector2(-12, -358)
-
-[node name="Line2D" type="Line2D" parent="."]
-material = SubResource("ShaderMaterial_53rot")
-
-[node name="DecorationSpawner" type="Node2D" parent="Line2D" node_paths=PackedStringArray("rs", "sloper", "player", "line", "terrain_generator")]
-script = ExtResource("2_mltma")
-max_radius = 20
-rs = NodePath("../../RandomSystem")
-sloper = NodePath("../../TerrainGenerator/Sloper")
-player = NodePath("../../Player")
-
-line = NodePath("..")
-terrain_generator = NodePath("../../TerrainGenerator")
-decorations = Array[ExtResource("9_gi5x3")]([SubResource("Resource_uvuv7")])
-
-[node name="StaticBody2D" type="StaticBody2D" parent="Line2D"]
-
-[node name="Timer" type="Timer" parent="."]
-wait_time = 5.0
-one_shot = true
-autostart = true
-script = ExtResource("10_w6fsc")
-
-[connection signal="timeout" from="Timer" to="Timer" method="_on_timeout"]
-
+move_speed = 200.0
+jump_force = 500.0

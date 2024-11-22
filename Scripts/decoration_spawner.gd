@@ -9,7 +9,7 @@ var line_section_length: int
 @export var rs: RandomSystem
 @export var sloper: Sloper
 
-@export var player: Node2D
+var player: Node2D
 
 @export var line: Line2D
 @export var terrain_generator: Node2D
@@ -19,33 +19,37 @@ var last_point: int
 var loaded_segments: Array[int]
 
 func _ready():
+
 	line_start_x = global_position.x
 	line_section_length = terrain_generator.line_segment_length
 	
 func _process(delta):
-	var x = player.global_position.x
-	var closest_point = int((x - line_start_x)/line_section_length)
-	
-	for loaded_segment in loaded_segments:
-		if abs(loaded_segment - closest_point) > max_radius:
-			loaded_segments.erase(loaded_segment)
-			for child in get_children():
-				var cp = int((child.global_position.x - line_start_x)/line_section_length)
-				if abs(cp - closest_point) > max_radius:
-					child.queue_free()
-	
-	if closest_point != last_point:
-		for i in range(load_radius*2):
-			var point = closest_point + i - load_radius
-			var already_loaded := false 
-			for loaded_segment in loaded_segments:
-				if point == loaded_segment:
-					already_loaded = true
-					break
-			if !already_loaded and point > -1 and point < line.points.size():
-				spawn_decoration(point)
-				loaded_segments.append(point)
+	if player:
+		var x = player.global_position.x
+		var closest_point = int((x - line_start_x)/line_section_length)
 		
+		for loaded_segment in loaded_segments:
+			if abs(loaded_segment - closest_point) > max_radius:
+				loaded_segments.erase(loaded_segment)
+				for child in get_children():
+					var cp = int((child.global_position.x - line_start_x)/line_section_length)
+					if abs(cp - closest_point) > max_radius:
+						child.queue_free()
+		
+		if closest_point != last_point:
+			for i in range(load_radius*2):
+				var point = closest_point + i - load_radius
+				var already_loaded := false 
+				for loaded_segment in loaded_segments:
+					if point == loaded_segment:
+						already_loaded = true
+						break
+				if !already_loaded and point > -1 and point < line.points.size():
+					spawn_decoration(point)
+					loaded_segments.append(point)
+	else:
+		player = sloper.player
+			
 
 func spawn_decoration(point):
 	var i := 0
