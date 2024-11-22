@@ -26,15 +26,6 @@ fill = 1
 fill_from = Vector2(0.5, 0.5)
 metadata/_snap_enabled = true
 
-[sub_resource type="Resource" id="Resource_m7sui"]
-script = ExtResource("4_ygruv")
-prefab = ExtResource("3_t801l")
-spawn_on_center = true
-initial_chance = 100
-chance_to_spawn = 20.0
-chance_multiplyer = 1
-min_scale = 6.0
-max_scale = 6.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_53rot"]
 shader = ExtResource("4_21xhv")
