@@ -28,6 +28,8 @@ max_scale = 6.0
 
 [node name="Game" type="Node2D"]
 
+[node name="Node" type="Node" parent="."]
+
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("target")]
 position = Vector2(22, 48)
 script = ExtResource("1_g3w6i")
@@ -37,33 +39,34 @@ target = NodePath("../Player")
 [node name="RandomSystem" type="Node" parent="."]
 script = ExtResource("1_38dti")
 
+[node name="Player" parent="." instance=ExtResource("3_vobs3")]
+position = Vector2(-12, -358)
+
 [node name="TerrainGenerator" type="Node2D" parent="." node_paths=PackedStringArray("ground_line", "floor_collider", "rs", "sloper")]
 script = ExtResource("2_redno")
-ground_line = NodePath("../Line2D")
-floor_collider = NodePath("../Line2D/StaticBody2D")
+ground_line = NodePath("Line2D")
+floor_collider = NodePath("Line2D/StaticBody2D")
 rs = NodePath("../RandomSystem")
 sloper = NodePath("Sloper")
 line_length = 20
 
 [node name="Sloper" type="Node" parent="TerrainGenerator" node_paths=PackedStringArray("line", "terrain_generator")]
 script = ExtResource("1_pfyk3")
-line = NodePath("../../Line2D")
+line = NodePath("../Line2D")
 terrain_generator = NodePath("..")
 
-[node name="Player" parent="." instance=ExtResource("3_vobs3")]
-position = Vector2(-12, -358)
-
-[node name="Line2D" type="Line2D" parent="."]
+[node name="Line2D" type="Line2D" parent="TerrainGenerator"]
 material = SubResource("ShaderMaterial_53rot")
 
-[node name="DecorationSpawner" type="Node2D" parent="Line2D" node_paths=PackedStringArray("rs", "sloper", "player", "line", "terrain_generator")]
+[node name="DecorationSpawner" type="Node2D" parent="TerrainGenerator/Line2D" node_paths=PackedStringArray("rs", "sloper", "player", "line", "terrain_generator")]
 script = ExtResource("2_mltma")
-max_radius = 20
-rs = NodePath("../../RandomSystem")
-sloper = NodePath("../../TerrainGenerator/Sloper")
-player = NodePath("../../Player")
+load_radius = 3
+max_radius = 10
+rs = NodePath("../../../RandomSystem")
+sloper = NodePath("../../Sloper")
+player = NodePath("../../../Player")
 line = NodePath("..")
-terrain_generator = NodePath("../../TerrainGenerator")
+terrain_generator = NodePath("../..")
 decorations = Array[ExtResource("9_gi5x3")]([SubResource("Resource_uvuv7")])
 
-[node name="StaticBody2D" type="StaticBody2D" parent="Line2D"]
+[node name="StaticBody2D" type="StaticBody2D" parent="TerrainGenerator/Line2D"]

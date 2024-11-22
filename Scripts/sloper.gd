@@ -9,12 +9,13 @@ var line_section_length: int
 @export var line: Line2D
 @export var terrain_generator: Node2D
 
+var line_segment_lenght
+var line_lenght
 @onready var line_offset = line.width / 2 - 1
 
 func _ready():
 	line_start_x = line.global_position.x
-	line_section_length = terrain_generator.line_section_length
-
+	line_section_length = terrain_generator.line_segment_length
 
 func _physics_process(delta):
 	for sloper_target in get_tree().get_nodes_in_group("to_be_alined"):
@@ -41,10 +42,9 @@ func spawn_at_point(object: PackedScene, parent: Node, point: int, part_of_segme
 	var instance = object.instantiate()
 	var x = p1.x + line_section_length*part_of_segment
 	
-	instance.position = Vector2(x, x * a + b - line_offset)
+	instance.global_position = Vector2(x, x * a + b - line_offset)
 	instance.rotation = distance.angle()
 	if scale.x != 0 and scale.y != 0:
 		instance.scale = scale
-	
 	parent.add_child(instance)
 	return instance

@@ -1,4 +1,4 @@
-extends Node
+extends Node2D
 
 var line_start_x: float
 var line_section_length: int
@@ -19,11 +19,11 @@ var last_point: int
 var loaded_segments: Array[int]
 
 func _ready():
-	line_start_x = line.global_position.x
-	line_section_length = terrain_generator.line_section_length
+	line_start_x = global_position.x
+	line_section_length = terrain_generator.line_segment_length
 	
 func _process(delta):
-	var x = player.position.x
+	var x = player.global_position.x
 	var closest_point = int((x - line_start_x)/line_section_length)
 	
 	for loaded_segment in loaded_segments:
@@ -48,7 +48,6 @@ func _process(delta):
 		
 
 func spawn_decoration(point):
-	print("point: " + str(point))
 	var i := 0
 	for decoration in decorations:
 		if decoration and decoration.prefab:

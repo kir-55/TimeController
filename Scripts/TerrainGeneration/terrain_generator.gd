@@ -8,11 +8,11 @@ extends Node
 @export var rs: RandomSystem
 @export var sloper: Sloper
 
-@export var points_amount := 100
+@export var line_length := 100
 
 # x distance between points
-@export var line_section_length = 300
-@export var section_y_change_amplitude = 200
+@export var line_segment_length = 96
+@export var section_y_change_amplitude = 50
 
 @export var decorations: Array[Decoration]
 
@@ -23,32 +23,20 @@ extends Node
 @export var tower_prefab: PackedScene
 @export var main_house_prefab: PackedScene
 
-@export var player: Node2D
-
 @onready var line_offset = ground_line.width / 2 - 1
 
 
-
-# Measured with LINE POINTS!
-@export_category("Village")
-@export var village: Node2D
-@export var village_start = 20
-@export var village_end = 50
-@export var normal_house_prefab: PackedScene
-@onready var main_house_pos: int = village_start + (village_end - village_start)/2
-
 func _ready():
-	for decoration in decorations:
-		print(decoration.chance_to_spawn)
-		
+	ground_line.global_position.x = -line_length * line_segment_length/2
 	ground_line.add_point(Vector2.ZERO)
-	points_amount -= 1
 	
-	for i in range(points_amount):
+	
+	
+	for i in range(line_length-1):
 		if i % 2 == 1:
-			create_next_point(ground_line.get_point_position(i) + Vector2(line_section_length, rs.get_rnd_float(-section_y_change_amplitude, section_y_change_amplitude)), ground_line.get_point_position(i))
+			create_next_point(ground_line.get_point_position(i) + Vector2(line_segment_length, rs.get_rnd_float(-section_y_change_amplitude, section_y_change_amplitude)), ground_line.get_point_position(i))
 		else:
-			create_next_point(ground_line.get_point_position(i) + Vector2(line_section_length, 0), ground_line.get_point_position(i))
+			create_next_point(ground_line.get_point_position(i) + Vector2(line_segment_length, 0), ground_line.get_point_position(i))
 	
 	
 	
@@ -66,11 +54,12 @@ func _ready():
 	#sloper.spawn_at_point(main_house_prefab, village, main_house_pos, rs.get_rnd_float(0, 1))
 
 func _process(delta):
-	if player.global_position.x > ground_line.get_point_position(ground_line.points.size()-1).x - 2000:
-		if ground_line.points.size() % 2 == 1:
-			create_next_point(ground_line.get_point_position(ground_line.points.size()-1) + Vector2(line_section_length, rs.get_rnd_float(-section_y_change_amplitude, section_y_change_amplitude)), ground_line.get_point_position(ground_line.points.size()-1))
-		else:
-			create_next_point(ground_line.get_point_position(ground_line.points.size()-1) + Vector2(line_section_length, 0), ground_line.get_point_position(ground_line.points.size()-1))
+	pass
+	#if player.global_position.x > ground_line.get_point_position(ground_line.points.size()-1).x - 2000:
+		#if ground_line.points.size() % 2 == 1:
+			#create_next_point(ground_line.get_point_position(ground_line.points.size()-1) + Vector2(line_section_length, rs.get_rnd_float(-section_y_change_amplitude, section_y_change_amplitude)), ground_line.get_point_position(ground_line.points.size()-1))
+		#else:
+			#create_next_point(ground_line.get_point_position(ground_line.points.size()-1) + Vector2(line_section_length, 0), ground_line.get_point_position(ground_line.points.size()-1))
 
 
 func create_next_point(position: Vector2, lastPosition: Vector2):
@@ -81,4 +70,5 @@ func create_next_point(position: Vector2, lastPosition: Vector2):
 	segment.b = position - Vector2(0, line_offset)
 	new_shape.shape = segment
 	ground_line.add_point(position)
+	print(position)
 	#grass_line.add_point(position)
