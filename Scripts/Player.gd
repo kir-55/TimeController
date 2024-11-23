@@ -16,6 +16,7 @@ extends CharacterBody2D
 @export var jump_buffer_time: float = 0.15 # Time the player can press jump before landing
 
 
+@export var weapon: Sprite2D
 # Internal variables
 var is_jumping: bool = false
 var is_dashing: bool = false
@@ -24,12 +25,10 @@ var dash_cooldown_timer: float = 0.0
 var coyote_timer: float = 0.0
 var jump_buffer_timer: float = 0.0
 
-func _ready():
-	pass
-
+# Direction the player is facing
+var direction: Vector2 = Vector2.RIGHT  # Default direction
 
 func _physics_process(delta: float) -> void:
-	#print(global_position)
 	# Gravity
 	if not is_on_floor() and not is_dashing:
 		velocity.y += gravity * delta
@@ -56,14 +55,15 @@ func _physics_process(delta: float) -> void:
 	if is_jumping and Input.is_action_just_released("jump") and velocity.y < 0:
 		velocity.y *= 0.5
 
-	# Dashing
+	# Handle dashing
 	if Input.is_action_just_pressed("dash") and dash_cooldown_timer <= 0 and not is_dashing:
 		is_dashing = true
 		dash_timer = dash_duration
 		dash_cooldown_timer = dash_cooldown
 
 	if is_dashing:
-		velocity.x = dash_speed * Input.get_axis("left", "right")
+		# Move in the current direction during dash
+		velocity = direction * dash_speed
 		dash_timer -= delta
 		if dash_timer <= 0:
 			is_dashing = false
@@ -72,14 +72,27 @@ func _physics_process(delta: float) -> void:
 	if dash_cooldown_timer > 0:
 		dash_cooldown_timer -= delta
 
-	# Horizontal movement (normal)
+	# Normal horizontal movement
 	if not is_dashing:
-		var input = Input.get_axis("left", "right")
-		velocity.x = input * move_speed
+		var input = Vector2(Input.get_axis("left", "right"), 0)
+		
+		if input.x != 0:
+			print(input.x)
+			direction = input.normalized()  # Update direction based on input
+			if direction.x < 0:
+				weapon.flip_h = true
+			else:
+				weapon.flip_h = false
+			
+		velocity.x = input.x * move_speed
 
-	# Speed boost when holding sprint
-	if Input.is_action_pressed("sprint") and not is_dashing:
-		velocity.x *= 1.5
+		# Speed boost when holding sprint
+		if Input.is_action_pressed("sprint"):
+			velocity.x *= 1.5
 
 	# Move the player
 	move_and_slide()
+
+func get_direction() -> Vector2:
+	# Return the current direction vector
+	return direction

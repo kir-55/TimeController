@@ -278,11 +278,11 @@ material = SubResource("ShaderMaterial_tb3ot")
 [node name="DecorationSpawner" type="Node2D" parent="Line2D" node_paths=PackedStringArray("rs", "sloper", "line", "terrain_generator")]
 script = ExtResource("9_21quh")
 max_radius = 20
+decorations = Array[ExtResource("6_84rr2")]([SubResource("Resource_uvuv7")])
 rs = NodePath("../../RandomSystem")
 sloper = NodePath("../../TerrainGenerator/Sloper")
 line = NodePath("..")
 terrain_generator = NodePath("../../TerrainGenerator")
-decorations = Array[ExtResource("6_84rr2")]([SubResource("Resource_uvuv7")])
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Line2D"]
 

@@ -1,28 +1,40 @@
-[gd_scene load_steps=8 format=3 uid="uid://bva6jjs3q5tws"]
+[gd_scene load_steps=14 format=3 uid="uid://bva6jjs3q5tws"]
 
 [ext_resource type="Script" path="res://Scripts/сamera.gd" id="1_g3w6i"]
-[ext_resource type="Texture2D" uid="uid://bkcqblgw7rqln" path="res://graphics/Rysunek_1_.png" id="2_7sbqv"]
-[ext_resource type="Texture2D" uid="uid://elwdkhnntkh8" path="res://graphics/Rysuwnek_1_.png" id="3_tgy82"]
+[ext_resource type="Texture2D" uid="uid://doy3s3fi7mpg7" path="res://graphics/Rysunek_1_2.png" id="2_nmu7u"]
+[ext_resource type="Texture2D" uid="uid://vs0k2o8gwo" path="res://graphics/Rysusdfwnek_1_.png" id="3_6il1s"]
 [ext_resource type="PackedScene" uid="uid://c2017ftjcxbam" path="res://Scenes/player.tscn" id="3_vobs3"]
+[ext_resource type="Texture2D" uid="uid://nrvndnk3b7j7" path="res://graphics/Rysunek_1_3.png" id="4_26ps3"]
+[ext_resource type="Script" path="res://Scenes/health_system.gd" id="5_1xsmr"]
+[ext_resource type="Script" path="res://Scenes/weapon.gd" id="7_a3a2n"]
+[ext_resource type="Texture2D" uid="uid://db27yfvycogkc" path="res://graphics/Rysunek_2_Animacja_3.png" id="7_y3am6"]
+[ext_resource type="PackedScene" uid="uid://buxptejpeo6y3" path="res://Scenes/bullet.tscn" id="8_f5i67"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_pggbp"]
-texture = ExtResource("2_7sbqv")
+texture = ExtResource("2_nmu7u")
 0:0/0 = 0
 0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
 0:0/0/physics_layer_0/angular_velocity = 0.0
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4prnx"]
-texture = ExtResource("3_tgy82")
+texture = ExtResource("3_6il1s")
 0:0/0 = 0
 0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
 0:0/0/physics_layer_0/angular_velocity = 0.0
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -5, 8, -5, 8, 8, -8, 8)
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_u6q5j"]
+texture = ExtResource("4_26ps3")
+0:0/0 = 0
+0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_0/angular_velocity = 0.0
+
 [sub_resource type="TileSet" id="TileSet_jui2t"]
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_pggbp")
 sources/1 = SubResource("TileSetAtlasSource_4prnx")
+sources/2 = SubResource("TileSetAtlasSource_u6q5j")
 
 [node name="Game" type="Node2D"]
 
@@ -33,12 +45,29 @@ speed = 3.0
 target = NodePath("../Player")
 
 [node name="TileMap" type="TileMap" parent="."]
-position = Vector2(22, 48)
 scale = Vector2(6, 6)
 tile_set = SubResource("TileSet_jui2t")
 format = 2
-layer_0/tile_data = PackedInt32Array(65529, 1, 0, 65530, 1, 0, 65531, 1, 0, 65532, 1, 0, 65533, 1, 0, 65534, 1, 0, 131070, 0, 0, 131071, 0, 0, 65536, 0, 0, 65537, 0, 0, 65538, 0, 0, 2, 1, 0, 65535, 1, 0, 0, 1, 0, 1, 1, 0, 131065, 0, 0, 131066, 0, 0, 131067, 0, 0, 131068, 0, 0, 131069, 0, 0, 65539, 0, 0, 3, 1, 0, 65540, 0, 0, 65541, 0, 0, 65542, 0, 0, 6, 1, 0, 5, 1, 0, 4, 1, 0, 7, 1, 0, 65543, 0, 0, 65544, 0, 0, 65545, 0, 0, 8, 1, 0, 9, 1, 0, 10, 1, 0, 11, 1, 0, 65546, 0, 0, 65547, 0, 0, 196601, 0, 0, 196602, 0, 0, 262138, 0, 0, 262139, 0, 0, 262140, 0, 0, 327676, 0, 0, 327677, 0, 0, 327678, 0, 0, 262142, 0, 0, 262143, 0, 0, 196608, 0, 0, 196609, 0, 0, 196610, 0, 0, 196611, 0, 0, 196612, 0, 0, 196613, 0, 0, 196614, 0, 0, 196615, 0, 0, 196616, 0, 0, 196617, 0, 0, 196618, 0, 0, 131081, 0, 0, 131080, 0, 0, 131079, 0, 0, 131078, 0, 0, 131077, 0, 0, 131076, 0, 0, 131075, 0, 0, 131074, 0, 0, 262141, 0, 0, 196604, 0, 0, 196605, 0, 0, 196607, 0, 0, 196606, 0, 0, 196603, 0, 0, 262137, 0, 0, 327672, 0, 0, 327673, 0, 0, 131082, 0, 0, 131083, 0, 0, 196619, 0, 0, 131072, 0, 0, 131073, 0, 0)
+layer_0/tile_data = PackedInt32Array(65529, 1, 0, 65530, 1, 0, 65531, 1, 0, 65532, 1, 0, 65533, 1, 0, 65534, 1, 0, 131070, 0, 0, 131071, 0, 0, 65536, 0, 0, 65537, 0, 0, 65538, 0, 0, 2, 1, 0, 65535, 1, 0, 0, 1, 0, 1, 1, 0, 131065, 0, 0, 131066, 0, 0, 131067, 0, 0, 131068, 0, 0, 131069, 0, 0, 65539, 0, 0, 3, 1, 0, 65540, 0, 0, 65541, 0, 0, 65542, 0, 0, 6, 1, 0, 5, 1, 0, 4, 1, 0, 7, 1, 0, 65543, 0, 0, 65544, 0, 0, 65545, 0, 0, 8, 1, 0, 9, 1, 0, 10, 1, 0, 11, 1, 0, 65546, 0, 0, 65547, 0, 0, 196601, 2, 0, 196602, 2, 0, 262138, 2, 0, 262139, 2, 0, 262140, 2, 0, 327676, 2, 0, 327677, 2, 0, 327678, 2, 0, 262142, 2, 0, 262143, 2, 0, 196608, 2, 0, 196609, 2, 0, 196610, 2, 0, 196611, 2, 0, 196612, 2, 0, 196613, 2, 0, 196614, 2, 0, 196615, 2, 0, 196616, 2, 0, 196617, 2, 0, 196618, 2, 0, 131081, 2, 0, 131080, 2, 0, 131079, 2, 0, 131078, 2, 0, 131077, 2, 0, 131076, 2, 0, 131075, 2, 0, 131074, 2, 0, 262141, 2, 0, 196604, 2, 0, 196605, 2, 0, 196607, 2, 0, 196606, 2, 0, 196603, 2, 0, 262137, 2, 0, 327672, 0, 0, 327673, 2, 0, 131082, 2, 0, 131083, 2, 0, 196619, 2, 0, 131072, 2, 0, 131073, 2, 0, 327674, 2, 0, 327675, 2, 0, 327679, 2, 0, 262144, 2, 0, 262145, 2, 0, 262146, 2, 0, 262147, 2, 0, 262148, 2, 0, 262149, 2, 0, 262150, 2, 0, 262151, 2, 0, 262152, 2, 0, 262153, 2, 0, 262154, 2, 0, 262155, 2, 0, 131085, 2, 0)
 
-[node name="Player" parent="." instance=ExtResource("3_vobs3")]
+[node name="HealthSystem" type="Node" parent="."]
+script = ExtResource("5_1xsmr")
+
+[node name="Player" parent="." node_paths=PackedStringArray("weapon") instance=ExtResource("3_vobs3")]
+position = Vector2(7, -108)
 move_speed = 200.0
 jump_force = 500.0
+weapon = NodePath("Weapon")
+
+[node name="Weapon" type="Sprite2D" parent="Player" node_paths=PackedStringArray("timer")]
+scale = Vector2(6, 6)
+texture = ExtResource("7_y3am6")
+script = ExtResource("7_a3a2n")
+bullet_scene = ExtResource("8_f5i67")
+timer = NodePath("Cooldown")
+
+[node name="Cooldown" type="Timer" parent="Player/Weapon"]
+wait_time = 0.2
+autostart = true
+
+[connection signal="timeout" from="Player/Weapon/Cooldown" to="Player/Weapon" method="_on_cooldown_timeout"]
