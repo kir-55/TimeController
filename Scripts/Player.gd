@@ -5,6 +5,7 @@ extends CharacterBody2D
 @export var jump_force: float = 500.0
 @export var gravity: float = 1200.0
 @export var max_fall_speed: float = 800.0
+@onready var animated_sprite = $AnimatedSprite2D
 
 # Dash variables
 @export var dash_speed: float = 600.0
@@ -23,6 +24,11 @@ var dash_timer: float = 0.0
 var dash_cooldown_timer: float = 0.0
 var coyote_timer: float = 0.0
 var jump_buffer_timer: float = 0.0
+
+
+
+
+	
 
 func _ready():
 	pass
@@ -52,6 +58,7 @@ func _physics_process(delta: float) -> void:
 		is_jumping = true
 		jump_buffer_timer = 0.0
 
+
 	# Variable jump height
 	if is_jumping and Input.is_action_just_released("jump") and velocity.y < 0:
 		velocity.y *= 0.5
@@ -76,7 +83,22 @@ func _physics_process(delta: float) -> void:
 	if not is_dashing:
 		var input = Input.get_axis("left", "right")
 		velocity.x = input * move_speed
-
+	
+	# flipping if go left 
+	var direction=Input.get_axis("left","right")
+	if direction > 0:
+		animated_sprite.flip_h=false
+	elif direction < 0:
+		animated_sprite.flip_h=true
+	if direction==0:
+		animated_sprite.play("idle")
+	else:
+		animated_sprite.play("walk")
+	# animating jump 
+	if is_jumping == true:
+		animated_sprite.play("jump")
+		
+		
 	# Speed boost when holding sprint
 	if Input.is_action_pressed("sprint") and not is_dashing:
 		velocity.x *= 1.5
